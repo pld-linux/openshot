@@ -1,0 +1,19 @@
+diff -dur openshot-1.1.0.orig/openshot/classes/project.py openshot-1.1.0/openshot/classes/project.py
+--- openshot-1.1.0.orig/openshot/classes/project.py	2010-03-01 06:39:41.000000000 +0100
++++ openshot-1.1.0/openshot/classes/project.py	2010-03-13 16:53:34.000000000 +0100
+@@ -44,7 +44,7 @@
+ 		self.BASE_DIR = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+ 		self.GLADE_DIR = os.path.join(self.BASE_DIR, "openshot", "windows", "glade")
+ 		self.IMAGE_DIR = os.path.join(self.BASE_DIR, "openshot", "images")
+-		self.LOCALE_DIR = os.path.join(self.BASE_DIR, "openshot", "locale")
++		self.LOCALE_DIR = os.path.join("/usr/share/locale")
+ 		self.PROFILES_DIR = os.path.join(self.BASE_DIR, "openshot", "profiles")
+ 		self.TRANSITIONS_DIR = os.path.join(self.BASE_DIR, "openshot", "transitions")
+ 		self.EXPORT_PRESETS_DIR = os.path.join(self.BASE_DIR, "openshot", "export_presets")
+@@ -319,4 +319,4 @@
+ 		# Restore State
+ 		restore_state.restore_project_state(self, state)
+ 				
+-		
+\ No newline at end of file
++		
