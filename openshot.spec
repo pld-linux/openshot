@@ -8,29 +8,30 @@ Source0:	http://launchpadlibrarian.net/40379921/%{name}-%{version}.tar.gz
 # Source0-md5:	d05da3c49446326f3e45c8dfe60b1438
 Patch0:		%{name}-locale_dir.patch
 URL:		http://www.openshotvideo.com/
+BuildRequires:	python-devel
 BuildRequires:	rpm-pythonprov
 BuildRequires:	rpmbuild(macros) >= 1.219
+Requires(post,postun):	scrollkeeper
+Requires(post,postun):	shared-mime-info
 Requires:	python-mlt
 Requires:	python-pygoocanvas
 Requires:	python-pygtk-glade
 Requires:	python-pygtk-gtk
 Requires:	python-pygtk-pango
 Requires:	python-pyxdg
-Requires(post,postun):	shared-mime-info
-Requires(post,postun):  scrollkeeper
 BuildArch:	noarch
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %description
-OpenShot Video Editor is a free, open-source, non-linear video editor.  It can
-create and edit videos and movies using many popular video, audio, and image
-formats.  Create videos for YouTube, Flickr, Vimeo, Metacafe, iPod, Xbox, and
-many more common formats!
-        
+OpenShot Video Editor is a free, open-source, non-linear video editor.
+It can create and edit videos and movies using many popular video,
+audio, and image formats. Create videos for YouTube, Flickr, Vimeo,
+Metacafe, iPod, Xbox, and many more common formats!
+
 Features include:
-	* Multiple tracks (layers) Compositing, image overlays, and watermarks
-	* Support for image sequences (rotoscoping) Key-frame animation Video
-	* and audio effects (chroma-key) Transitions (lumas and masks)
+ - Multiple tracks (layers) Compositing, image overlays, and watermarks
+ - Support for image sequences (rotoscoping) Key-frame animation Video
+ - and audio effects (chroma-key) Transitions (lumas and masks)
 
 %prep
 %setup -q
@@ -59,7 +60,7 @@ rmdir $RPM_BUILD_ROOT%{py_sitescriptdir}/%{name}/locale
 %py_comp $RPM_BUILD_ROOT%{py_sitescriptdir}
 %py_postclean
 
-rm $RPM_BUILD_ROOT%{_libdir}/mime/packages/%{name}
+rm $RPM_BUILD_ROOT%{_prefix}/lib/mime/packages/%{name}
 
 cp -R docs/gnome $RPM_BUILD_ROOT%{_datadir}/gnome/help/%{name}
 cp -R docs/omf $RPM_BUILD_ROOT%{_datadir}/omf/%{name}
