@@ -10,10 +10,3 @@ diff -dur openshot-1.1.0.orig/openshot/classes/project.py openshot-1.1.0/opensho
  		self.PROFILES_DIR = os.path.join(self.BASE_DIR, "openshot", "profiles")
  		self.TRANSITIONS_DIR = os.path.join(self.BASE_DIR, "openshot", "transitions")
  		self.EXPORT_PRESETS_DIR = os.path.join(self.BASE_DIR, "openshot", "export_presets")
-@@ -319,4 +319,4 @@
- 		# Restore State
- 		restore_state.restore_project_state(self, state)
- 				
--		
-\ No newline at end of file
-+		
