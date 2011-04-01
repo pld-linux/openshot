@@ -13,6 +13,7 @@ BuildRequires:	rpm-pythonprov
 BuildRequires:	rpmbuild(macros) >= 1.219
 Requires(post,postun):	scrollkeeper
 Requires(post,postun):	shared-mime-info
+Requires:	python-httplib2
 Requires:	python-mlt
 Requires:	python-pygoocanvas
 Requires:	python-pygtk-glade
@@ -81,12 +82,14 @@ rm -rf $RPM_BUILD_ROOT
 %files -f %{name}.lang
 %defattr(644,root,root,755)
 %doc AUTHORS README
-%attr(755,root,root) %{_bindir}/*
+%attr(755,root,root) %{_bindir}/openshot
+%attr(755,root,root) %{_bindir}/openshot-render
 %{_datadir}/mime/packages/*
-%{_mandir}/man1/*
-%{_pixmapsdir}/*
-%{_desktopdir}/*.desktop
+%{_mandir}/man1/openshot.1*
+%{_mandir}/man1/openshot-render.1*
+%{_pixmapsdir}/openshot.svg
+%{_desktopdir}/openshot.desktop
 %{py_sitescriptdir}/%{name}
 %if "%{py_ver}" > "2.4"
-%{py_sitescriptdir}/*.egg-info
+%{py_sitescriptdir}/openshot*.egg-info
 %endif
