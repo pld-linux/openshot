@@ -1,0 +1,129 @@
+diff -x '*.pyc' -x '*.py~' -x '*.ui~' -urBN openshot-1.4.3//openshot/classes/sequences.py openshot-1.4.3-patched//openshot/classes/sequences.py
+--- openshot-1.4.3//openshot/classes/sequences.py	2012-09-30 22:33:29.000000000 +0200
++++ openshot-1.4.3-patched//openshot/classes/sequences.py	2013-05-21 21:56:14.000000000 +0200
+@@ -302,10 +302,7 @@
+ 
+ 		# resize the canvas height and width
+ 		new_size_of_middle = Size_Of_Middle + 200
+-		if new_size_of_middle > 32000:
+-			# do not let the size of the canvas exceed 32,000... or cairo will throw an error
+-			new_size_of_middle = 32000
+-
++		
+ 		canvas_timeline.set_bounds (0, 0, new_size_of_middle, timeline_heigth)
+ 		self.project.form.hscrollbar2.set_range(0, new_size_of_middle)
+ 		self.project.form.vscrollbar2.set_range(0, timeline_heigth)
+@@ -381,9 +378,7 @@
+ 		# loop through each tick mark
+ 		number_of_ticks = int(self.length / self.scale)
+ 		ruler_pixels = ((float(self.length) / float(self.scale)) * self.tick_pixels)
+-		if ruler_pixels > 32000:
+-			ruler_pixels = 32000
+-
++		
+ 		tick = 0
+ 		end_of_timeline = False
+ 
+diff -x '*.pyc' -x '*.py~' -x '*.ui~' -urBN openshot-1.4.3//openshot/widgets/catalog.xml openshot-1.4.3-patched//openshot/widgets/catalog.xml
+--- openshot-1.4.3//openshot/widgets/catalog.xml	1970-01-01 01:00:00.000000000 +0100
++++ openshot-1.4.3-patched//openshot/widgets/catalog.xml	2012-05-27 22:55:15.000000000 +0200
+@@ -0,0 +1,11 @@
++<?xml version="1.0" encoding="UTF-8"?>
++<glade-catalog name="openshotwidgets" library="gladepython" domain="glade-3" depends="gtk+" language="python">
++	<init-function>glade_python_init</init-function>
++	<glade-widget-classes>
++		<glade-widget-class title="Extended Scrollbar" name="Extended_Scrollbar" generic-name="Extended_Scrollbar"></glade-widget-class>
++	</glade-widget-classes>
++	<glade-widget-group name="OpenShot-widgets" title="OpenShot Widgets">
++		<glade-widget-class-ref name="Extended_Scrollbar"/>
++	</glade-widget-group>
++</glade-catalog>
++ 
+diff -x '*.pyc' -x '*.py~' -x '*.ui~' -urBN openshot-1.4.3//openshot/widgets/__init__.py openshot-1.4.3-patched//openshot/widgets/__init__.py
+--- openshot-1.4.3//openshot/widgets/__init__.py	1970-01-01 01:00:00.000000000 +0100
++++ openshot-1.4.3-patched//openshot/widgets/__init__.py	2013-05-21 22:38:02.000000000 +0200
+@@ -0,0 +1 @@
++#Comment so diff will include the file in the patch
+\ Kein Zeilenumbruch am Dateiende.
+diff -x '*.pyc' -x '*.py~' -x '*.ui~' -urBN openshot-1.4.3//openshot/widgets/openshotwidgets.py openshot-1.4.3-patched//openshot/widgets/openshotwidgets.py
+--- openshot-1.4.3//openshot/widgets/openshotwidgets.py	1970-01-01 01:00:00.000000000 +0100
++++ openshot-1.4.3-patched//openshot/widgets/openshotwidgets.py	2013-05-22 22:55:24.000000000 +0200
+@@ -0,0 +1,40 @@
++import gtk
++
++class Extended_Scrollbar(gtk.HScrollbar):
++    __gtype_name__ = 'Extended_Scrollbar'
++ 
++    def __init__(self):
++        self.adjustedadjustment=gtk.Adjustment(0.0, 0.0, 101.0, 0.1, 1.0, 1.0)
++        self.scalefactor=1.0
++        self.offset=0
++        super(Extended_Scrollbar,self).__init__(self.adjustedadjustment)
++        
++    def get_value(self):
++        return (super(Extended_Scrollbar,self).get_value()-self.offset)/self.scalefactor
++
++    def set_value(self,goto_pixel):
++        super(Extended_Scrollbar,self).set_value(goto_pixel*self.scalefactor+self.offset)
++
++    def set_range(self,gminimum,gmaximum):
++        maxrange=64000
++        if gmaximum<gminimum:
++            swap=gmaximum
++            gmaximum=gminimum
++            gminimum=swap
++        
++        if gmaximum-gminimum>maxrange or gmaximum>32000 or gminimum<32000:
++            self.scalefactor=float(maxrange)/float(gmaximum-gminimum)
++            gmaximum=32000
++            gminimum=-32000
++            self.offset=-32000
++        else:
++            self.scalefactor=1.0
++            self.offset=0
++        super(Extended_Scrollbar,self).set_range(gminimum,gmaximum)
++
++
++    def get_adjustment(self):
++        return super(Extended_Scrollbar,self).get_adjustment()  
++    
++    def set_adjustment_page_size(self,pagesize):
++        super(Extended_Scrollbar,self).get_adjustment().set_page_size(pagesize)
+\ Kein Zeilenumbruch am Dateiende.
+diff -x '*.pyc' -x '*.py~' -x '*.ui~' -urBN openshot-1.4.3//openshot/windows/MainGTK.py openshot-1.4.3-patched//openshot/windows/MainGTK.py
+--- openshot-1.4.3//openshot/windows/MainGTK.py	2012-09-30 22:33:29.000000000 +0200
++++ openshot-1.4.3-patched//openshot/windows/MainGTK.py	2013-05-22 22:54:13.000000000 +0200
+@@ -28,6 +28,7 @@
+ import webbrowser
+ import subprocess
+ import shutil
++from widgets import openshotwidgets
+ 
+ import classes.effect as effect
+ from classes import files, lock, messagebox, open_project, project, timeline, tree, video, inputbox, av_formats, clip
+@@ -2450,7 +2451,7 @@
+ 			
+ 		# get the middle of the window
+ 		screen_width = (self.width / 2) - 100
+-			
++		
+ 		if playhead_pixels > (current_scroll_pixels + screen_width):
+ 			# scroll to last scroll position
+ 			self.hscrollbar2.set_value(playhead_pixels - screen_width)
+diff -x '*.pyc' -x '*.py~' -x '*.ui~' -urBN openshot-1.4.3//openshot/windows/ui/Main.ui openshot-1.4.3-patched//openshot/windows/ui/Main.ui
+--- openshot-1.4.3//openshot/windows/ui/Main.ui	2012-09-30 22:33:29.000000000 +0200
++++ openshot-1.4.3-patched//openshot/windows/ui/Main.ui	2013-05-22 22:49:28.000000000 +0200
+@@ -1694,11 +1694,11 @@
+                           </packing>
+                         </child>
+                         <child>
+-                          <object class="GtkHScrollbar" id="hscrollbar2">
++                          <object class="Extended_Scrollbar" id="hscrollbar2">
+                             <property name="visible">True</property>
+                             <property name="can_focus">False</property>
+                             <property name="adjustment">adjustment1</property>
+-                            <signal name="value-changed" handler="on_hscrollbar2_value_changed" swapped="no"/>
++                            <signal name="value-changed" handler="on_hscrollbar2_value_changed"/>
+                           </object>
+                           <packing>
+                             <property name="expand">True</property>
