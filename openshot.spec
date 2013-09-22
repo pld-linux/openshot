@@ -1,12 +1,13 @@
 Summary:	OpenShot - Non-Linear Video Editor for Linux
 Name:		openshot
 Version:	1.4.3
-Release:	3
+Release:	4
 License:	GPL v3
 Group:		X11/Applications
 Source0:	http://launchpad.net/openshot/1.4/%{version}/+download/%{name}-%{version}.tar.gz
 # Source0-md5:	5ec82a7e8b7700ee4a359458aedf19e9
 Patch0:		%{name}-locale_dir.patch
+Patch1:		openshot-bug-722285.patch
 URL:		http://www.openshot.org/
 BuildRequires:	python-devel
 BuildRequires:	rpm-pythonprov
@@ -37,6 +38,7 @@ Features include:
 %prep
 %setup -q
 %patch0 -p1
+%patch1 -p1
 
 %build
 %{__python} setup.py build
