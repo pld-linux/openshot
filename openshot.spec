@@ -1,28 +1,20 @@
 Summary:	OpenShot - Non-Linear Video Editor for Linux
 Name:		openshot
-Version:	1.4.3
-Release:	8
+Version:	2.1.0
+Release:	1
 License:	GPL v3
 Group:		X11/Applications
-Source0:	http://launchpad.net/openshot/1.4/%{version}/+download/%{name}-%{version}.tar.gz
-# Source0-md5:	5ec82a7e8b7700ee4a359458aedf19e9
-Patch0:		%{name}-locale_dir.patch
-Patch1:		openshot-bug-722285.patch
-Patch2:		openshot-r741.patch
-Patch3:		openshot-crf.patch
+Source0:	http://launchpad.net/openshot/2.1/%{version}/+download/%{name}-qt-%{version}.tar.gz
+# Source0-md5:	b4641ecebc02b1ad1047e3bfb3213774
 URL:		http://www.openshot.org/
-BuildRequires:	python-devel
+BuildRequires:	python3-devel
 BuildRequires:	rpm-pythonprov
 BuildRequires:	rpmbuild(macros) >= 1.219
 Requires(post,postun):	scrollkeeper
 Requires(post,postun):	shared-mime-info
-Requires:	python-httplib2
-Requires:	python-mlt
-Requires:	python-pygoocanvas
-Requires:	python-pygtk-glade
-Requires:	python-pygtk-gtk
-Requires:	python-pygtk-pango
-Requires:	python-pyxdg
+Requires:	python3-PyQt5
+Requires:	python3-PyQt5-uic
+Requires:	python3-zmq
 BuildArch:	noarch
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
@@ -38,42 +30,15 @@ Features include:
  - and audio effects (chroma-key) Transitions (lumas and masks)
 
 %prep
-%setup -q
-%patch0 -p1
-%patch1 -p1
-%patch2 -p0
-%patch3 -p1
+%setup -q -c
 
 %build
-%{__python} setup.py build
+%{py3_build}
 
 %install
 rm -rf $RPM_BUILD_ROOT
-install -d $RPM_BUILD_ROOT{%{_datadir}{/gnome/help,/omf},%{_localedir}}
 
-%{__python} setup.py install \
-	--optimize=2 \
-	--root=$RPM_BUILD_ROOT
-
-# clean up and move locales to the system localedir
-rm -r $RPM_BUILD_ROOT/%{py_sitescriptdir}/%{name}/locale/OpenShot
-rm $RPM_BUILD_ROOT/%{py_sitescriptdir}/%{name}/locale/README
-rm $RPM_BUILD_ROOT/%{py_sitescriptdir}/%{name}/locale/*/LC_MESSAGES/*.po
-mv $RPM_BUILD_ROOT%{py_sitescriptdir}/%{name}/locale/* \
-	$RPM_BUILD_ROOT/%{_localedir}
-rmdir $RPM_BUILD_ROOT%{py_sitescriptdir}/%{name}/locale
-
-%py_ocomp $RPM_BUILD_ROOT%{py_sitescriptdir}
-%py_comp $RPM_BUILD_ROOT%{py_sitescriptdir}
-
-rm $RPM_BUILD_ROOT%{_prefix}/lib/mime/packages/%{name}
-
-cp -R docs/gnome $RPM_BUILD_ROOT%{_datadir}/gnome/help/%{name}
-cp -R docs/omf $RPM_BUILD_ROOT%{_datadir}/omf/%{name}
-
-rm -rf $RPM_BUILD_ROOT%{_datadir}/locale/{ady,gaa,jv,shn}
-
-%find_lang %{name} --all-name --with-gnome --with-omf
+%{py3_install}
 
 %post
 %update_mime_database
@@ -86,17 +51,12 @@ rm -rf $RPM_BUILD_ROOT%{_datadir}/locale/{ady,gaa,jv,shn}
 %clean
 rm -rf $RPM_BUILD_ROOT
 
-%files -f %{name}.lang
+%files
 %defattr(644,root,root,755)
 %doc AUTHORS README
-%attr(755,root,root) %{_bindir}/openshot
-%attr(755,root,root) %{_bindir}/openshot-render
-%{_datadir}/mime/packages/*
-%{_mandir}/man1/openshot.1*
-%{_mandir}/man1/openshot-render.1*
-%{_pixmapsdir}/openshot.svg
-%{_desktopdir}/openshot.desktop
-%{py_sitescriptdir}/%{name}
-%if "%{py_ver}" > "2.4"
-%{py_sitescriptdir}/openshot*.egg-info
-%endif
+%attr(755,root,root) %{_bindir}/openshot-qt
+%{_datadir}/mime/packages/openshot-qt.xml
+%{_datadir}/applications/openshot-qt.desktop
+%{_pixmapsdir}/openshot-qt.svg
+%{py3_sitescriptdir}/%{name}_qt
+%{py3_sitescriptdir}/openshot*.egg-info
