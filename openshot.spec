@@ -2,7 +2,7 @@ Summary:	OpenShot - Non-Linear Video Editor for Linux
 Summary(pl.UTF-8):	OpenShot - nieliniowy edytor filmów dla Linuksa
 Name:		openshot
 Version:	2.4.2
-Release:	2
+Release:	3
 License:	GPL v3
 Group:		X11/Applications
 #Source0Download: https://github.com/OpenShot/openshot-qt/releases
