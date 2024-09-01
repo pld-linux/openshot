@@ -1,14 +1,13 @@
 Summary:	OpenShot - Non-Linear Video Editor for Linux
 Summary(pl.UTF-8):	OpenShot - nieliniowy edytor filmów dla Linuksa
 Name:		openshot
-Version:	2.4.2
-Release:	3
+Version:	3.2.1
+Release:	1
 License:	GPL v3
 Group:		X11/Applications
-#Source0Download: https://github.com/OpenShot/openshot-qt/releases
-#TODO: use	https://github.com/OpenShot/openshot-qt/archive/v%{version}/%{name}-%{version}.tar.gz
-Source0:	https://github.com/OpenShot/openshot-qt/archive/v%{version}.tar.gz
-# Source0-md5:	d5cdf9a71a4b02d54df18a83596c49f4
+Source0:	https://github.com/OpenShot/openshot-qt/archive/v%{version}/%{name}-%{version}.tar.gz
+# Source0-md5:	081b1aedfbb1e0a9812653f4c7586d67
+Patch0:		noarch-dir.patch
 URL:		http://www.openshot.org/
 BuildRequires:	python3-devel
 BuildRequires:	python3-setuptools
@@ -18,7 +17,7 @@ Requires(post,postun):	shared-mime-info
 Requires:	python3-PyQt5
 Requires:	python3-PyQt5-uic
 Requires:	python3-httplib2
-Requires:	python3-libopenshot >= 0.1.8
+Requires:	python3-libopenshot >= 0.3.3
 Requires:	python3-zmq
 BuildArch:	noarch
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
@@ -48,6 +47,7 @@ Możliwości obejmują:
 
 %prep
 %setup -q -n %{name}-qt-%{version}
+%patch0 -p1
 
 %build
 %py3_build
@@ -68,10 +68,15 @@ rm -rf $RPM_BUILD_ROOT
 
 %files
 %defattr(644,root,root,755)
-%doc AUTHORS README.md
+%doc AUTHORS.md README.md
 %attr(755,root,root) %{_bindir}/openshot-qt
-%{_datadir}/mime/packages/openshot-qt.xml
-%{_datadir}/applications/openshot-qt.desktop
 %{_pixmapsdir}/openshot-qt.svg
 %{py3_sitescriptdir}/openshot_qt
 %{py3_sitescriptdir}/openshot*.egg-info
+%{_datadir}/mime/packages/openshot-qt
+%{_desktopdir}/org.openshot.OpenShot.desktop
+%{_iconsdir}/hicolor/*x*/apps/openshot-qt.png
+%{_iconsdir}/hicolor/scalable/apps/openshot-qt.svg
+%{_iconsdir}/hicolor/scalable/mimetypes/openshot-qt-doc.svg
+%{_datadir}/metainfo/org.openshot.OpenShot.appdata.xml
+%{_datadir}/mime/packages/org.openshot.OpenShot.xml

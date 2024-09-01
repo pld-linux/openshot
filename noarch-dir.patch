@@ -1,0 +1,11 @@
+--- openshot-qt-3.2.1/setup.py~	2024-07-10 23:00:58.000000000 +0200
++++ openshot-qt-3.2.1/setup.py	2024-09-01 14:33:31.396571634 +0200
+@@ -79,7 +79,7 @@
+     # XDG desktop mime types cache
+     ('share/mime/packages', ['xdg/org.openshot.OpenShot.xml']),
+     # launcher (mime.types)
+-    ('lib/mime/packages', ['xdg/openshot-qt']),
++    ('share/mime/packages', ['xdg/openshot-qt']),
+ ]
+ 
+ # Find files matching patterns
